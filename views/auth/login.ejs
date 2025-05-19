@@ -1,0 +1,55 @@
+<div class="row my-5 justify-content-center">
+  <div class="col-8 col-md-6 col-lg-4">
+    <h3 class="text-center mb-5">로그인</h3>
+    <form id="frm" method="post">
+      <div class="input-group my-2">
+        <div class="input-group-text">이 메 일</div>
+        <input class="form-control" id="email" value="tomato@hot.com" />
+      </div>
+      <div class="input-group">
+        <div class="input-group-text">비밀번호</div>
+        <input
+          class="form-control"
+          id="password"
+          type="password"
+          value="12345678"
+        />
+      </div>
+      <div class="my-3">
+        <button type="button" class="btn btn-success w-100" onclick="onLogin()">Google</button>
+      </div>
+      <div class="text-end mt-3"><a href="/users/join">회원가입</a></div>
+    </form>
+  </div>
+</div>
+<script type="module">
+  import AuthLogic, { loginGoogle } from '/javascripts/authLogic.js'
+  import { app } from '/javascripts/firebase.js'
+  const authLogic = new AuthLogic()//사용자 정의 클래스
+  //const xhr = new XMLHttpRequest()//브라우저제공 클래스
+
+//module을 선언하면 defer생략할 수 있다. - 난 비동기가 디폴트야
+  window.onLogin = async() => {
+    console.log('onLogin');
+    //console.log(auth);
+    console.log(authLogic.auth);
+    console.log(authLogic.googleProvider);
+    //authLogic에 있는 로그인 함수를 호출하기
+    try {
+      //구글 로그인이 성공하면 프로필 정보를 주입 받아온다.
+      const user = await loginGoogle(authLogic.auth, authLogic.googleProvider)
+      console.log(user);
+      console.log(user.uid);
+      console.log(user.displayName);
+      localStorage.setItem("userId", user.uid)
+      localStorage.setItem("displayName", user.displayName)
+      if(user.uid){
+        //goToMaker(user.uid)
+        location.href="/"
+      }
+
+    } catch (error) {
+      console.error(error+':로그인 오류입니다.');
+    }
+  }
+</script>
