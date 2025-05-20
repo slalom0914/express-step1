@@ -52,6 +52,16 @@
         //여기까지 문제가 없다면 후처리를 하자.
         localStorage.setItem("uid", user.uid)
         localStorage.setItem("email", user.email)
+        //여기까지 실행이 되었다면 로그인이 성공한것임.
+        //login은 display:none으로 logout display:block
+
+        document.querySelector("#login").style.display = 'none'
+        document.querySelector("#logout").style.display = 'block'
+        document.querySelector("#myEmail").style.display = 'block'
+        document.querySelector("#myEmail").querySelector("a").textContent = data.user.email
+        //location.reload()
+        location.href = "/"
+
       })
       .catch((error) => {
         const errorCode = error.code;
