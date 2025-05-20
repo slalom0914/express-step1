@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const session = require('express-session')
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
@@ -18,6 +19,19 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: 'secret',
+  //secret: process.env.SECRET, // 비밀밀번호
+  cookie: {
+    maxAge: 1000*60*60, // 1 hour,
+    secure: false, // HTTPS환경에서만 쿠키 전송하려면 true로 설정
+    httpOnly: true, //클라이언트 자바스크립트에서 쿠키 접근 방지
+  },
+}))
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);

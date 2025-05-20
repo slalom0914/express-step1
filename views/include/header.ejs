@@ -29,10 +29,10 @@
           <li class="nav-item" id="login">
             <a class="nav-link active" aria-current="page" href="#">로그인</a>
           </li>              
-          <li class="nav-item" id="email" style="display: inline;">
+          <li class="nav-item" id="myEmail" style="display: none;">
             <a class="nav-link active" aria-current="page" href="#">현사용자이메일주소</a>
           </li>              
-          <li class="nav-item" id="email" style="display: inline;">
+          <li class="nav-item" id="logout" style="display: none;">
             <a class="nav-link active" aria-current="page" href="#">로그아웃</a>
           </li>              
         </ul>
@@ -41,3 +41,26 @@
     </div>
   </div>
 </nav>
+<script type="module">
+//여기는 자바스크립트 영역 이다.
+//localStorage에 email값이 있어?
+  const myEmail = localStorage.getItem("email")
+  //세션에 읽어온 email값을 출력하기
+  //index.js(라우터) - email:req.session.email
+  const semail = '<%= email %>'
+  console.log("세션에 저장된 email은 "+semail);//null, test@hot.com
+  if(myEmail){//email이 존재한다. 그러면 로그인을 한 사람이다.
+    //로그인은 안보이게 로그아웃은 보이게하고 또 이메일도 출력해준다. 
+    document.querySelector("#login").style.display = 'none'
+    document.querySelector("#logout").style.display = 'block'
+    document.querySelector("#myEmail").style.display = 'block'
+    //a태그 내부에 이메일 문자열 치환하기
+    document.querySelector("#myEmail").querySelector("a").textContent = myEmail
+  }
+  else{
+    document.querySelector("#login").style.display = 'block'
+    document.querySelector("#logout").style.display = 'none'
+    document.querySelector("#myEmail").style.display = 'none'
+  }
+
+</script>

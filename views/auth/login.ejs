@@ -4,7 +4,7 @@
     <form id="frm" method="post">
       <div class="input-group my-2">
         <div class="input-group-text">이 메 일</div>
-        <input class="form-control" id="email" value="tomato@hot.com" />
+        <input class="form-control" id="uemail" value="tomato@hot.com" />
       </div>
       <div class="input-group">
         <div class="input-group-text">비밀번호</div>
@@ -15,18 +15,50 @@
           value="12345678"
         />
       </div>
-      <div class="my-3">
-        <button type="button" class="btn btn-success w-100" onclick="onLogin()">Google</button>
-      </div>
-      <div class="text-end mt-3"><a href="/users/join">회원가입</a></div>
     </form>
+    <div class="my-3">
+      <button id="default" type="button" class="btn btn-success w-100">로그인</button>
+    </div>
+    <div class="my-3">
+      <button id="google" type="button" class="btn btn-primary w-100">Google</button>
+    </div>
+    <div class="my-3">
+      <button id="kakao" type="button" class="btn btn-warning w-100">Kakao</button>
+    </div>
+    <div class="text-end mt-3"><a href="/users/join">회원가입</a></div>
   </div>
 </div>
 <script type="module">
   import AuthLogic, { loginGoogle } from '/javascripts/authLogic.js'
+   import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js"
   import { app } from '/javascripts/firebase.js'
   const authLogic = new AuthLogic()//사용자 정의 클래스
   //const xhr = new XMLHttpRequest()//브라우저제공 클래스
+  const auth = getAuth() //AuthLogic생성자 함수 선언된 전변
+  console.log(auth);
+  //사용자가 입력한 이메일과 비번을 받아오기
+  const uEmail = document.querySelector("#uemail").value
+  const uPassword = document.querySelector("#password").value
+  //비밀번호 인증 로그인
+  const login = document.querySelector("#default")
+  login.addEventListener('click',()=>{
+    //처리
+    console.log('비밀번호 로그인'+uEmail+", "+uPassword);
+    signInWithEmailAndPassword(auth, uEmail, uPassword)
+      .then((data) => {
+        // 로그인이 성공했을 때 
+        const user = data.user;
+        console.log(user);
+        //여기까지 문제가 없다면 후처리를 하자.
+        localStorage.setItem("uid", user.uid)
+        localStorage.setItem("email", user.email)
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });    
+
+  })//이메일과비번으로 로그인하기
 
 //module을 선언하면 defer생략할 수 있다. - 난 비동기가 디폴트야
   window.onLogin = async() => {
