@@ -81,8 +81,8 @@
       await auth.signOut();
       //비번으로 로그인을 했을 때는 내가 직접 localStorage삭제해서
       //로그인 상태를 풀어준다.
-      localStorage.removeItem('email') //email만 지워줘
-      //localStorage.clear()//모두 다 지워줘
+      //localStorage.removeItem('email') //email만 지워줘
+      localStorage.clear()//모두 다 지워줘
       //카카오 로그인 일 때는 세션을 지워줘 - 서버에서 삭제가능함.
       //브라우저에서는 세션을 삭제할 수 없다.
       //세션은 서버의 cache메모리에 저장되어 있으니까....
