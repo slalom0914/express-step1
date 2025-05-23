@@ -1,0 +1,29 @@
+<div>
+  <!-- 검색 키워드 전송하기 -->
+  <!-- 검색 키워드 전송하기 -->
+</div>
+<hr />
+<!-- 카카오 도서검색 결과를 출력할 공간만 마련해둠 -->
+<div class="row" id="list_book"></div>
+<!-- 카카오 도서검색 결과를 출력할 공간만 마련해둠 -->
+
+<!-- 도서 목록 템플릿 -->
+<script type="text/x-handlebars-template" id="temp-book"></script>
+<!-- 도서 목록 템플릿 -->
+
+<!-- 페이지 네비게이션 버튼 -->
+<div class="text-center mt-2">
+  <button class="btn btn-primary btn-sm px-5" id="prev">이전</button>
+  <span id="page" class="px-3">1/10</span>
+  <button class="btn btn-primary btn-sm px-5" id="next">다음</button>
+</div>
+<!-- 페이지 네비게이션 버튼 -->
+<!-- 데이터 가져오기[Back-End] -->
+<script type="module">
+  //파이어베이스 API활용 - 장바구니 구현, 공지사항 구현, 게시판구현
+  import { app } from '/javascripts/firebase.js'
+  import { getDatabase } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js"
+  const db = getDatabase(app)
+  console.log(db);
+</script>
+<!-- 데이터 가져오기[Back-End] -->
