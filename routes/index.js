@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 var express = require('express');
 var router = express.Router();
 
@@ -24,4 +25,31 @@ router.get('/home', function(req, res, next){
 router.get('/login', function(req, res, next) {
   res.render('index', { title: '로그인', pageName: 'auth/login.ejs', email: null });
 });
+
+/* 카카오 로그인 Redirect설정 */
+router.get('/auth/kakao/callback', async(req,res, next)=>{
+  //카카오 서버에서 카카오 로그인 이미지 버튼으로 요청시 붙인 redirect_url에
+  // 쿼리스트링[?code=12345....]으로 인증코드를 보내준다.
+  console.log(req.query.code);
+  const code = req.query.code
+  try {
+    //Access Token 가져오기
+    //Access Token으로 사용자 프로필 가져오기
+    const res1 = await axios.post('https://kauth.kakao.com/oauth/token', null, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      },
+      params:{
+      grant_type: 'authorization_code',
+      client_id: '본인키',
+      redirect_uri: 'http://localhost:5000/auth/kakao/callback',
+      code: code 
+      }
+    })
+    const accessToken = res1.data.access_token
+    console.log('Access Token:', accessToken);
+  } catch (error) {
+    console.error('에러',error);
+  }
+})
 module.exports = router;

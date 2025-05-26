@@ -23,7 +23,9 @@
       <button id="google" type="button" class="btn btn-primary w-100">Google</button>
     </div>
     <div class="my-3">
-      <button id="kakao" type="button" class="btn btn-warning w-100">Kakao</button>
+      <button onclick="kakaoLogin(event)"  type="button">
+        <img src="/images/kakao_login/ko/kakao_login_medium_wide.png" alt="카카오로그인"/>
+      </button>
     </div>
     <div class="text-end mt-3"><a href="/users/join">회원가입</a></div>
   </div>
@@ -95,5 +97,24 @@
       console.error('로그인 실패', error);
     }
   })//end of 구글 로그인
+
+  const kakaoLogin = (event) => {
+    //화면이 새로고침 일어남.
+    event.preventDefault();//submist이슈 해결. 이벤트 전이 막음 
+    try {
+      //예외가 발생할 가능성이 있는 코드를 여기에 작성함
+      //카카오 인증 코드 가져오기
+      const kakaoAuthUrl = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=4b140cf1d4428a43b2d0318382e7b264&redirect_uri=http://localhost:5000/auth/kakao/callback' //404
+      //폼전송이나 fetch, axios없이도 location객체를 활용하여 카카오서버에
+      //인증 코드를 요청할 수 있다.
+      window.location.href = kakaoAuthUrl  //여기서 예외상황 발생함.
+    } catch (error) {
+      //예외가 발생하지 않으면 실행기회가 없음
+      console.error('카카오 인증코드 받기 실패', error);
+    }
+  }
+
+  //전역변수로 등록하기
+  window.kakaoLogin = kakaoLogin
 
 </script>
