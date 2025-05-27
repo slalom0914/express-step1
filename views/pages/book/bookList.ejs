@@ -3,7 +3,7 @@
 <!-- 검색 키워드 전송하기  -->
       <form name="frm">
         <div class="input-group">
-          <input type="text" name="query" class="form-control" />
+          <input type="text" name="query" class="form-control" value="파이썬"/>
           <button class="btn btn-success">검색</button>
         </div>
       </form>
@@ -62,6 +62,7 @@
   import { getDatabase } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js"
   const db = getDatabase(app)
   console.log(db);
+  //페이지 상태 값을 담음
   let page = 1
   let query
   const listEl = document.querySelector('#list_book')
@@ -103,6 +104,22 @@
   //도서검색 리스트 조회 함수 구현
   //카카오 도서검색 URL요청하기 - 비동기 처리
   const lisetEl = document.querySelector('#list_book')
+  const pageEl = document.querySelector('#page') //현재 위치 상태값
+  const prevBtn = document.querySelector('#prev') //이전버튼
+  const nextBtn = document.querySelector('#next') //다음버튼
+
+  //페이지에 대한 상태값이 바뀌면 화면도 다시 렌더링 해야 한다.
+  //다시 렌더링 -> getBookList -> 검색결과 출력할 때
+  //페이지 네비게이션
+  nextBtn.addEventListener('click', ()=> {
+    page++
+    getBookList()
+  })
+  prevBtn.addEventListener('click', ()=> {
+    page--
+    getBookList()
+  })
+
   const getBookList = () => {
     const book_url = new URL('https://dapi.kakao.com/v3/search/book')
     book_url.searchParams.set('target', 'title')
@@ -125,6 +142,12 @@
       const total = result.meta.total_count;
       const last = Math.ceil(total / 6)
       console.log(`${isEnd}, ${total} , ${last}`);
+
+      pageEl.textContent = `${page}/${last}`
+      //만일 마지막 페이지라면 다음버튼은 비활성화 한다.
+      //현재가 1페이지라면 이전페이지는 없다. - 비활성화 처리
+      prevBtn.disabled = (page === 1)
+      nextBtn.disabled = isEnd
     })
     .catch((error) => console.error(error));
 
