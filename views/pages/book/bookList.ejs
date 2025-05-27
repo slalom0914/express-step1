@@ -72,7 +72,23 @@
     //이벤트 소스 타겟
     //타겟에 따라서 장바구니 처리와 이미지 클릭 모달 처리를 해야 한다.- 분기
     const target = e.target
-    console.log(target);
+    console.log(target.tagName);//IMG, DIV 대문자로 출력됨 - 태그이름
+    //CART글자를 클릭한거야?
+    if(target.classList.contains('cart')){
+      console.log('CART클릭했을 때');
+    }
+    else if('IMG' === target.tagName){//부트스트랩 제공하는 모달 활용연습
+      const idx =target.getAttribute('index')
+      console.log(idx);//사용자 선택한 도서 이미지의 식별자 가져오기
+      //사용자가 선택한 도서의 모달 인덱스 접근
+      const modalEl = document.querySelector(`#modal${idx}`)
+      console.log(modalEl);
+      if(modalEl){
+        //bootstrap은 부트스트랩이 제공하는 객체임
+        const modal = new bootstrap.Modal(modalEl)
+        modal.show()
+      }
+    }//end of image
   })
   //검색 폼 제출하기
   document.forms['frm'].addEventListener('submit',(e)=>{
@@ -100,8 +116,15 @@
     })
     .then(res => res.json())
     .then(result => {
+      console.log(result);
       const imsi = Handlebars.compile(document.querySelector('#temp-book').innerHTML)
       lisetEl.innerHTML = imsi(result)
+
+      //페이징 처리시에 필요한 메타 정보 담기
+      const isEnd = result.meta.is_end;
+      const total = result.meta.total_count;
+      const last = Math.ceil(total / 6)
+      console.log(`${isEnd}, ${total} , ${last}`);
     })
     .catch((error) => console.error(error));
 
