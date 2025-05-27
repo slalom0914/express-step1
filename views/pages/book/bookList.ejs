@@ -3,7 +3,7 @@
 <!-- 검색 키워드 전송하기  -->
       <form name="frm">
         <div class="input-group">
-          <input type="text" name="query" class="form-control" value="자바" />
+          <input type="text" name="query" class="form-control" />
           <button class="btn btn-success">검색</button>
         </div>
       </form>
@@ -21,20 +21,26 @@
     <div class="col-6 col-md-4 col-lg-2">
       <div class="card my-2">
         <div class="card-body text-center">
-          <img src="{{image thumbnail}}" alt="도서이미지" style="cursor:pointer; width:80%" />
+          <img src="{{image thumbnail}}" index="{{@index}}" alt="도서이미지" style="cursor:pointer; width:80%" />
           <div class="ellipsis mt-2">{{title}}</div>
         </div>
         <div class="card-footer text-center" style="font-size:0.9rem;">
-          {{price}}
+          {{format price}}
           <span class="cart ms-3" book="{{book @this}}" style="cursor:pointer; color:green;">CART</span>
         </div>
       </div>
+
+      <%- include("bookModal.ejs") %>
+
     </div>
   {{/each}}
 </script>
 <!-- 도서 목록 템플릿 -->
 <!-- Handlebards 헬퍼 등록 -->
 <script>
+  Handlebars.registerHelper("format", function(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+  });  
   Handlebars.registerHelper("image", function(thum){
     return thum || "https://placehold.co/120x174"
   })
@@ -56,8 +62,26 @@
   import { getDatabase } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js"
   const db = getDatabase(app)
   console.log(db);
-
+  let page = 1
+  let query
+  const listEl = document.querySelector('#list_book')
+  //listEl은 핸들바스로 가져온 목록 전체
+  //목록 영역 클릭 이벤트(장바구니 & 도서 이미지 모달)
+  listEl.addEventListener('click', (e)=>{
+    console.log('도서목록 클릭 이벤트 호출');
+    //이벤트 소스 타겟
+    //타겟에 따라서 장바구니 처리와 이미지 클릭 모달 처리를 해야 한다.- 분기
+    const target = e.target
+    console.log(target);
+  })
   //검색 폼 제출하기
+  document.forms['frm'].addEventListener('submit',(e)=>{
+    e.preventDefault() //submit이슈 방어코드
+    //id가 아니라 name을 접근할 때
+    query = document.forms['frm'].query.value 
+    console.log(query);
+    getBookList()
+  })
   //사용자가 입력한 책제목 키워드 저장하기 - 전역적으로 사용 - 변수 선언 위치
 
   //도서검색 리스트 조회 함수 구현
@@ -66,9 +90,9 @@
   const getBookList = () => {
     const book_url = new URL('https://dapi.kakao.com/v3/search/book')
     book_url.searchParams.set('target', 'title')
-    book_url.searchParams.set('query', '자바')
-    book_url.searchParams.set('page', 5)
-    book_url.searchParams.set('size', 2)
+    book_url.searchParams.set('query', query)
+    book_url.searchParams.set('page', page)
+    book_url.searchParams.set('size', 6)
 
     //카카오 서버와 통신하기
     fetch(book_url, {

@@ -49,7 +49,7 @@ router.get('/auth/kakao/callback', async(req,res, next)=>{
       },
       params:{
       grant_type: 'authorization_code',
-      client_id: '4b140cf1d4428a43b2d0318382e7b264',
+      client_id: '	8f73106701912a0c5ad804b388094c6d',
       redirect_uri: 'http://localhost:5000/auth/kakao/callback',
       code: code 
       }

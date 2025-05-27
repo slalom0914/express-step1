@@ -23,7 +23,7 @@
       <button id="google" type="button" class="btn btn-primary w-100">Google</button>
     </div>
     <div class="my-3">
-      <button onclick="kakaoLogin(event)"  type="button">
+      <button onclick="kakaoLogin(event)" type="button" style="border: none; background: none; padding: 0; outline: none;">
         <img src="/images/kakao_login/ko/kakao_login_medium_wide.png" alt="카카오로그인"/>
       </button>
     </div>
@@ -104,7 +104,7 @@
     try {
       //예외가 발생할 가능성이 있는 코드를 여기에 작성함
       //카카오 인증 코드 가져오기
-      const kakaoAuthUrl = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=4b140cf1d4428a43b2d0318382e7b264&redirect_uri=http://localhost:5000/auth/kakao/callback' //404
+      const kakaoAuthUrl = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=8f73106701912a0c5ad804b388094c6d&redirect_uri=http://localhost:5000/auth/kakao/callback' //404
       //폼전송이나 fetch, axios없이도 location객체를 활용하여 카카오서버에
       //인증 코드를 요청할 수 있다.
       window.location.href = kakaoAuthUrl  //여기서 예외상황 발생함.
