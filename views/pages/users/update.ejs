@@ -41,9 +41,9 @@
   const uid = window.localStorage.getItem('uid')
   //사용자가 입력한 값을 새로 읽어온다. - id사용
   const form = document.querySelector('#frm')
-  const name = document.querySelector('#name')
-  const phone = document.querySelector('#phone')
-  const address = document.querySelector('#address')
+  const nameInput = document.querySelector('#name')
+  const phoneInput = document.querySelector('#phone')
+  const addressInput = document.querySelector('#address')
   const fileInput = document.querySelector('#file')
   const fileName = document.querySelector('#fileName')
   //수정처리 - 있는 정보를 수정하므로 화면을 열기 전에 DB서버를 경유한다.
@@ -56,21 +56,22 @@
   const snapshot = await getDoc(doc(db, `user/${uid}`))
   if(snapshot.data()){
     const user = snapshot.data()
-    name.value = user.name;
-    phone.value = user.phone;
-    address.value = user.address
+    nameInput.value = user.name;
+    phoneInput.value = user.phone;
+    addressInput.value = user.address
     //사진이 존재하면....
     if(user.photo){
       //insert here
+      fileName.src = user.photo
     }
   }//end of if
   //폼 제출 이벤트 처리
   form.addEventListener('submit', async(e)=>{
     e.preventDefault() //submit 이슈 방어하기
     if(window.confirm('변경 사항을 수정하겠습니까?')){
-      const name = name.value;
-      const address = address.value;
-      const phone = phone.value
+      const name = nameInput.value;
+      const address = addressInput.value;
+      const phone = phoneInput.value
       //첨부파일이 있을 때와 없을 때 처리하기 루틴이 달라져야 한다.
       console.log(fileInput.files[0]);
       if(fileInput.files[0]){
