@@ -1,1 +1,49 @@
-장바구니
+<div class="row my-5">
+  <div class="col">
+    <h1 class="text-center mb-5">장바구니</h1>
+    <div id="cart_list">핸들바스스크립트와데이터머지된코드삽입</div>
+  </div>
+</div>
+<!--장바구니 템플릿-->
+<script id="temp" type="text/x-handlebars-template">
+  <table class="table table-striped">
+    {{#each this}}
+      <tr>
+          <td>{{title}}</td>
+          <td>{{authors}}</td>
+          <td>{{price}}</td>
+          <td><button class="btn btn-danger btn-sm" data-isbn="{{ isbn }}">삭제</button></td>
+      </tr>
+    {{/each}}  
+  </table>
+</script>
+<script type="module">
+  import { app } from '/javascripts/firebase.js'
+  import { getDatabase, onValue, remove, ref } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-database.js"
+  const db = getDatabase(app)
+  const uid = localStorage.getItem('uid')
+
+  //장바구니 목록
+  onValue(ref(db, `cart/${uid}`), (snapshot) => {
+    //꺼내온 데이터를 핸들바스와 머지해야 하므로 반복문이 필요함.
+    //그래서 데이터를 담을 배열을 하나 선언하지
+    let rows = []
+    snapshot.forEach(item => {
+      rows.push({key: item.key, ...item.val()})
+    })//end of forEach
+    const temp = Handlebars.compile(document.querySelector('#temp').innerHTML)
+    document.querySelector('#cart_list').innerHTML = temp(rows)
+  })//end of 장바구니 목록 끝
+  //장바구니 삭제
+  document.querySelector('#cart_list').addEventListener('click',(event)=>{
+    //삭제 버튼을 클릭했을 때 그 로우에 있는 버튼에 속성값에 
+    //해당 도서의 식별자 값이 바인딩되어 있다.
+    if(event.target.classList.contains('btn-danger')){
+      const isbn = event.target.getAttribute('data-isbn')
+      console.log('사용자가 선택한 삭제버튼에 있는 data-isbn속성값 가져오기:'+isbn);
+      if(confirm(isbn+' 를 삭제할까요?')){
+        remove(ref(db, `cart/${uid}/${isbn}`))
+      }
+    }//사용자가 선택한 삭제버튼이 있는 위치에서 isbn가져오기
+  })//end of tr click event 처리
+</script>
